@@ -1,3 +1,16 @@
 # cs207-FinalProject
 
-Tests Passed: Check in later!
+Group Name:
+
+pydif
+
+Members:
+
+Nicholas Pagel
+Manish Reddy Vuyyuru
+Victor Sheng
+Hamish Nicholson
+
+Tests Passed:
+
+Check in later!
