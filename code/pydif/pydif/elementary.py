@@ -3,7 +3,7 @@ This file overloads elementary functions which do no have dunder methods
 including exponential and trig functions. The functions first try to work 
 with x as a dual number and falls back to treating x as a normal numerical type"""
 
-from dual import dual 
+from dual import Dual 
 import numpy as np 
 
 def cos(x):
@@ -32,28 +32,28 @@ def exp(x):
 
 def exp2(x):
 	try:
-		return Dual(np.exp2(x), 2**x * (x.der * np.log(2)))
+		return Dual(np.exp2(x), np.exp2(x.val) * (x.der * np.log(2)))
 	except:
 		return np.exp2(x)
 
 # natural log 
 def log(x):
 	try:
-		return Dual(np.log(x), 1/x * x.der )
+		return Dual(np.log(x), 1/x.val * x.der )
 	except:
 		return np.exp(x)	
 
 # log base 2
 def log2(x):
 	try:
-		return Dual(np.log2(x), 1/(x np.log(2) * x.der))
+		return Dual(np.log2(x), 1/(x.val * np.log(2)) * x.der)
 	except:
 		return np.log2(x)
 
 # log base 10
 def log10(x):
 	try:
-		return Dual(np.log10(x), 1/(x np.log(10) * x.der))
+		return Dual(np.log10(x), 1/(x.val * np.log(10)) * x.der)
 	except:
 		return np.log10(x)
 
