@@ -3,7 +3,7 @@ This file overloads elementary functions which do no have dunder methods
 including exponential and trig functions. The functions first try to work 
 with x as a dual number and falls back to treating x as a normal numerical type"""
 
-from dual import Dual 
+from .dual import Dual 
 import numpy as np 
 
 def cos(x):
