@@ -6,10 +6,10 @@ pydif
 
 Members:
 
-Nicholas Pagel
-Manish Reddy Vuyyuru
-Victor Sheng
-Hamish Nicholson
+Nicholas Pagel  
+Manish Reddy Vuyyuru  
+Victor Sheng  
+Hamish Nicholson  
 
 [![Build Status](https://travis-ci.org/pydif/cs207-FinalProject.svg?branch=master)](https://travis-ci.org/pydif/cs207-FinalProject)
 
