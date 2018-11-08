@@ -12,7 +12,9 @@ Returns:
 
 from inspect import signature
 #from dual import dual
-from dualDEPRECATED import Dual
+# from . import dualDEPRECATED as dual
+from pydif.dual.dual import Dual
+#import pydif.dual.dual as dual
 import numpy as np
 import collections
 
