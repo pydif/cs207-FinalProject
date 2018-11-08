@@ -8,6 +8,8 @@ setuptools.setup(
     version="0.0.1",
     author="Hamish Nicholson",
     author_email="hamish_nicholson@college.harvard.edu",
+    author="Nicholas Pagel",
+    author_email="pagel@g.harvard.edu",
     description="A work in progress package to implement automatic differentiation for numeric functions in python",
     long_description=long_description,
     long_description_content_type="text/markdown",
