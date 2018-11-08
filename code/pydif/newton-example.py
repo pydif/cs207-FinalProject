@@ -1,10 +1,10 @@
+import numpy as np
 from pydif.pydif import autodiff
-from pydif.elementary import elementary as ele
-#import elementaryDEPRECATED as ele
+from pydif.elementary import elementary as el
 
-#from lecture 9 slides from CS207
+#adapted from lecture 9 slides from CS207
 def f(x):
-    return x - ele.exp(-2.0 * ele.sin(4.0*x) * ele.sin(4.0*x))
+    return x - el.exp(-2.0 * el.sin(4.0*x) * el.sin(4.0*x))
 
 dfdx = autodiff(f)
 
@@ -23,3 +23,5 @@ for k in range(max_it):
         break
     print("At iteration {0}, Delta x = {1:17.16f}".format(k+1, delta_xk))
     xk += delta_xk # Update xk
+
+print('The calculated root is close to 0: {}.'.format(np.isclose(0.0,f(xk))))

@@ -1,9 +1,7 @@
 import pytest
 import numpy as np
-#import pydif
-from . import pydif
-from . import elementaryDEPRECATED as ele
-#import .elementaryDEPRECATED as ele
+from pydif import pydif 
+from pydif.elementary import elementary as el
 
 
 def test_multiply_add_simple():
@@ -67,7 +65,7 @@ def test_composite():
     pos = (1,2,3)
 
     def f1(x,y,z):
-        return (1/(x*y*z)) + ele.sin((1/x) + (1/y) + (1/z))
+        return (1/(x*y*z)) + el.sin((1/x) + (1/y) + (1/z))
     def f2(x,y,z):
         return (1/(x*y*z))
 
