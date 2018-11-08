@@ -48,7 +48,7 @@ class Dual():
 
     def __neg__(self):
         try:
-            return Dual(-self.f, -self.df)
+            return Dual(-self.val, -self.der)
         except AttributeError:
             return -self
 
