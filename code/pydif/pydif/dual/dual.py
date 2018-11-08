@@ -33,18 +33,28 @@ class Dual():
     def __truediv__(self, x):
         try:
             return Dual(self.val/ x.val, (self.der* x.val - self.val * x.der)/(x.val)**2)
-
         except AttributeError:
             return Dual(self.val /x, self.der / x)
 
+    def __rtruediv__(self, x):
+        return x * self**-1
+
     def __pow__(self, x):
         try:
-            self.der = x.der*self.val**x.val
-            self.val = self.val**x.val
+            return Dual(self.val**x.val, self.val**x.val*(self.der*(x.val/self.val)+x.der*np.log(self.val)))
         except AttributeError:
-            self.val = self.val**x
-            self.der = self.der**x
-        return self
+            print('this loop')
+
+            return Dual(self.val**x, self.val**x*(self.der*(x)/(self.val)))
+
+    def __rpow__(self, x):
+        try:
+            return Dual(self.val**x, self.val**x*x.der*np.log(self.val))
+            #raise AttributeError
+        except AttributeError:
+            print('that loop')
+            print('x: {}'.format(x))
+            return Dual(x**self.val, x**self.val*(self.der*np.log(x)))
 
     def __neg__(self):
         try:
