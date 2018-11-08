@@ -1,4 +1,4 @@
-import elementary as el
+from pydif.elementary import elementary as el
 import pytest
 # from ..dual.dual import Dual 
 from pydif.dual.dual import Dual
