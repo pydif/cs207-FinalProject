@@ -6,6 +6,6 @@ before_install:
     - pip install coveralls
     - pip install numpy
 script:
-    - py.test
+    - python -m pytest . --cov=.
 after_success:
     - coveralls
