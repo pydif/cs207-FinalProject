@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from dual import Dual
+from pydif.dual.dual import Dual
 
 def test_add():
 

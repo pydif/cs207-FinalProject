@@ -1,6 +1,7 @@
-import elementary as el
+from pydif.elementary import elementary as el
 import pytest
-from .dual import Dual 
+# from ..dual.dual import Dual 
+from pydif.dual.dual import Dual
 
 def test_cos():
     assert(el.cos(5) == pytest.approx(0.2836, 0.001))
