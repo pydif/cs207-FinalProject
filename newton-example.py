@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 import os
-sys.path.append(os.path.join(os.getcwd(),'pydif'))
+sys.path.append(os.path.join(os.getcwd(),'code','pydif'))
 from pydif.pydif import autodiff
 from pydif.elementary import elementary as el
 
