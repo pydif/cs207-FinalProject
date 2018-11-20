@@ -87,6 +87,32 @@ class Dual():
         except AttributeError:
             return -self
 
+    #overload equality
+    def __eq__(self, x):
+        try:
+            if self.val == x.val and self.der == x.der:
+                return True
+            else:
+                return False
+        except: #if not Dual, compare to value
+            if self.val == x:
+                return True
+            else:
+                return False
+
+    #overload inequality
+    def __neq__(self, x):
+        try:
+            if self.val != x.val or self.der != x.der:
+                return True
+            else:
+                return False
+        except: #if not Dual, compare to value
+            if self.val != x:
+                return True
+            else:
+                return False
+                
     #overload repr by displaying as a list where the first value is the value and the second is a derivative
     def __repr__(self):
         return '[{0},{1}]'.format(self.val, self.der)
