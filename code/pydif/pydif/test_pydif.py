@@ -4,6 +4,122 @@ from pydif import pydif
 from pydif.elementary import elementary as el
 
 
+def test_init():
+    def f1(x):
+        return x
+    def f2(x, y):
+        return x+y
+
+    ad1 = pydif.autodiff(f1)
+    ad2 = pydif.autodiff(f2)
+
+    assert(ad1.func == f1)
+    assert(ad2.func == f2)
+    assert(ad1.num_params == 1)
+    assert(ad2.num_params == 2)
+
+def test_check_dim():
+    def f1(x):
+        return x
+    def f2(x, y):
+        return x+y
+
+    ad1 = pydif.autodiff(f1)
+    ad2 = pydif.autodiff(f2)
+
+    with pytest.raises(ValueError):
+        ad1._check_dim([0,0])
+    ad1._check_dim([0])
+    ad1._check_dim(0)
+
+    with pytest.raises(ValueError):
+        ad2._check_dim([0])
+    with pytest.raises(ValueError):
+        ad2._check_dim(0)
+    ad2._check_dim([0,0])
+
+def test_enforce_unitvector():
+    def f1(x):
+        return x
+
+    dir1 = np.array([1])
+    dir2 = np.array([0.5])
+    dir3 = np.array([0,1])
+    dir4 = np.array([1,-1])
+    dir5 = np.array([0,0])
+
+    ad1 = pydif.autodiff(f1)
+
+    assert(np.isclose(ad1._enforce_unitvector(dir1),np.array([1])))
+    assert(np.isclose(ad1._enforce_unitvector(dir2),np.array([1])))
+    assert(all(np.isclose(ad1._enforce_unitvector(dir3),np.array([0,1]))))
+    assert(all(np.isclose(ad1._enforce_unitvector(dir4),np.array([np.sqrt(1/2),-np.sqrt(1/2)]))))
+
+    with pytest.raises(ValueError):
+        ad1._enforce_unitvector(dir5)
+
+def test_eval():
+    def f1(x):
+        return x
+    def f2(x, y):
+        return x+y
+
+    ad1 = pydif.autodiff(f1)
+    ad2 = pydif.autodiff(f2)
+
+    pos1 = 3
+    pos2 = [3,4]
+
+    assert(ad1._eval(pos1, jacobian=False).val == pos1)
+    assert(ad1._eval(pos1, jacobian=False).der == 1)
+    assert(ad1._eval(pos1, jacobian=True).val == pos1)
+    assert(ad1._eval(pos1, jacobian=True).der == 1)
+
+    assert(ad2._eval(pos2, jacobian=False).val == pos2[0] + pos2[1])
+    assert(ad2._eval(pos2, jacobian=False).der == 2)
+    assert(ad2._eval(pos2, jacobian=True).val == pos2[0] + pos2[1])
+    assert(all(ad2._eval(pos2, jacobian=True).der == [1,1]))
+
+def test_get_val():
+    def f1(x):
+        return x
+    def f2(x, y):
+        return x, y
+
+    ad1 = pydif.autodiff(f1)
+    ad2 = pydif.autodiff(f2)
+
+    pos1 = 3
+    pos2 = [3,4]
+    dir1 = [1]
+    dir2 = [0,1]
+
+    assert(ad1.get_val(pos1, direction=None) == pos1)
+    assert(ad1.get_val(pos1, direction=dir1) == pos1)
+
+    assert(ad2.get_val(pos2, direction=None) == pos2)
+    assert(ad2.get_val(pos2, direction=dir2) == pos2[1])
+
+def test_get_der():
+    def f1(x):
+        return x
+    def f2(x, y):
+        return x, y
+
+    ad1 = pydif.autodiff(f1)
+    ad2 = pydif.autodiff(f2)
+
+    pos1 = 3
+    pos2 = [3,4]
+    dir1 = [1]
+    dir2 = [0,1]
+
+    assert(ad1.get_der(pos1, direction=None) == 1)
+    assert(ad1.get_der(pos1, direction=dir1) == 1)
+
+    assert(ad2.get_der(pos2, direction=None) == [1,1])
+    assert(ad2.get_der(pos2, direction=dir2) == 1)
+
 def test_multiply_add_simple():
     alpha = 2
     pos = 2
