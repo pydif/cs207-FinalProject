@@ -43,9 +43,13 @@ class autodiff():
 
     #check that the specified position is the same shape as the function (specified at object creation) input
     def _check_pos(self, pos):
+        badDimentionsMsg = 'poorly formatted position. should be of length {}.'.format(self.num_params)
         if isinstance(pos, collections.Iterable):
             if len(pos) != self.num_params:
-                raise ValueError('poorly formatted position. should be of length {}.'.format(self.num_params))
+                raise ValueError(badDimentionsMsg)
+        else:
+            if self.num_params != 1:
+                raise ValueError(badDimentionsMsg)
 
     #evaluate the value of the function at a specified position
     def get_val(self, pos):
