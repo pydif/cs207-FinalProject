@@ -54,6 +54,8 @@ class autodiff():
     def _enforce_unitvector(self, direction):
         tmp_direction = np.array(direction)
         magnitude = np.sqrt(tmp_direction.dot(tmp_direction))
+        if magnitude == 0:
+            raise ValueError('poorly formatted direction. should be a vector of non-zero magnitude.')
         if magnitude != 1:
             tmp_direction = tmp_direction / magnitude
         return tmp_direction
