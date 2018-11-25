@@ -40,30 +40,37 @@ class autodiff():
             else:
                 params = Dual(pos,1)
             return self.func(params)
-
-    #check that the specified position is the same shape as the function (specified at object creation) input
-    def _check_pos(self, pos):
-        badDimentionsMsg = 'poorly formatted position. should be of length {}.'.format(self.num_params)
-        if isinstance(pos, collections.Iterable):
-            if len(pos) != self.num_params:
+    
+    #check that the specified iterable is the same shape as the function (specified at object creation) input
+    def _check_dim(self, item):
+        badDimentionsMsg = 'poorly formatted position or direction. should be of length {}.'.format(self.num_params)
+        if isinstance(item, collections.Iterable):
+            if len(item) != self.num_params:
                 raise ValueError(badDimentionsMsg)
         else:
             if self.num_params != 1:
                 raise ValueError(badDimentionsMsg)
 
+    def _enforce_unitvector(self, direction):
+        tmp_direction = np.array(direction)
+        magnitude = np.sqrt(tmp_direction.dot(tmp_direction))
+        if magnitude != 1:
+            tmp_direction = tmp_direction / magnitude
+        return tmp_direction
+
     #evaluate the value of the function at a specified position
     def get_val(self, pos):
-        self._check_pos(pos)
+        self._check_dim(pos)
         res = self._eval(pos)
         if isinstance(res, collections.Iterable):
             return [i.val for i in res]
         else:
             return res.val
 
-    #evaluate the derivatives of the function at a specified position
-    def get_der(self, pos, jacobian = False, dir=None):
-        if dir is None:
-            self._check_pos(pos)
+    #evaluate the derivatives of the function at a specified position in a specified direction
+    def get_der(self, pos, jacobian = False, direction=None):
+        if direction is None:
+            self._check_dim(pos)
             res = self._eval(pos, jacobian)
 
             if isinstance(res, collections.Iterable):
@@ -71,7 +78,14 @@ class autodiff():
             else:
                 return res.der
         else:
-            #seed vector/directional derivatives
+            self._check_dim(pos)
+            self._check_dim(direction)
+            res = self._eval(pos, jacobian)
+
+            if isinstance(res, collections.Iterable):
+                return np.array([i.der for i in res]) * direction
+
+
             raise NotImplementedError
 
 
