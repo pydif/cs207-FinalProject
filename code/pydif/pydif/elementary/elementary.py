@@ -24,6 +24,62 @@ def tan(x):
     except:
         return np.tan(x)
 
+def arccos(x):
+    try:
+        return Dual(np.arccos(x.val), -1 * x.der * 1/(np.sqrt(1- x.val**2)))
+    except:
+        return np.arccos(x)
+
+
+def arcsin(x):
+    try:
+        return Dual(np.arcsin(x.val), x.der * 1/(np.sqrt(1- x.val**2)))
+    except:
+        return np.arcsin(x)
+
+
+def arctan(x):
+    try:
+        return Dual(np.arctan(x.val), x.der * 1/(x.val**2 +1))
+    except:
+        return np.arctan(x)
+
+def sinh(x):
+    try:
+        return Dual(np.sinh(x.val), x.der * np.cosh(x.val))
+    except:
+        return np.sinh(x)
+
+def cosh(x):
+    try:
+        return Dual(np.cosh(x.val), x.der * np.sinh(x.val) )
+    except:
+        return np.cosh(x)
+
+def tanh(x):
+    try:
+        return Dual(np.tanh(x.val), x.der * 1/(np.cosh(x.val)**2))
+    except:
+        return np.tanh(x)
+
+def arcsinh(x):
+    try:
+        return Dual(np.arcsinh(x.val), x.der * 1/np.sqrt(x.val**2 +1))
+    except:
+        return np.arcsinh(x)
+
+def arccosh(x):
+    try:
+        return Dual(np.arccosh(x.val), x.der * (1/np.sqrt(x.val -1) * 1/(np.sqrt(x.val +1))))
+    except:
+        np.arccosh(x)
+
+def arctanh(x):
+    try:
+        return Dual(np.arctanh(x.val), -1 * x.der * 1/(x.val**2 -1))
+    except:
+        np.arctanh(x)
+
 def exp(x):
     try:
         return Dual(np.exp(x.val), x.der * np.exp(x.val))

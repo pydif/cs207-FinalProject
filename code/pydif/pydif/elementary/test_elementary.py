@@ -32,6 +32,47 @@ def test_exp():
     assert(ex.val == pytest.approx(20.0855369, 0.0001))
     assert(ex.der == pytest.approx(80.3421476, 0.0001))
 
+def test_arcsin():
+    assert(el.arcsin(1) == pytest.approx(1.570, 0.001))
+    x = Dual(0.5, 2)
+    arcsinx = el.arcsin(x)
+    assert(arcsinx.val == pytest.approx(0.5235, 0.001))
+    assert(arcsinx.der == pytest.approx(1.154*2, 0.001))
+
+def test_arccos():
+    assert(el.arccos(0.9) == pytest.approx(0.451, 0.001))
+    x = Dual(0.5, 2)
+    arccosx = el.arccos(x)
+    assert(arccosx.val == pytest.approx(1.047, 0.001))
+    assert(arccosx.der == pytest.approx( -2 *1.1547, 0.001))
+
+def test_arctan():
+    assert(el.arctan(0.75) == pytest.approx(0.6435, 0.001))
+    x = Dual(0.5, 2)
+    arctanx = el.arctan(x)
+    assert(arctanx.val == pytest.approx(0.4636, 0.001))
+    assert(arctanx.der == pytest.approx(2 *0.8, 0.001))
+
+def tesh_sinh():
+    assert(el.sinh(0.7) == pytest.approx(0.7585, 0.001))
+    x = Dual(0.5, 2)
+    sinhx = el.sinh(x)
+    assert(sinhx.val == pytest.approx(0.5210, 0.001))
+    assert(sinhx.der == pytest.approx(2 * 1.127, 0.001))
+
+def test_cosh():
+    assert(el.cosh(0.6) == pytest.approx(1.185, 0.001))
+    x = Dual(0.5, 2)
+    coshx = el.cosh(x)
+    assert(coshx.val == pytest.approx(1.127, 0.001))
+    assert(coshx.der == pytest.approx(2 * 0.52109, 0.001))
+
+def test_tanh():
+    assert(el.tanh(0.5) == pytest.approx(0.462, 0.001))
+    x = Dual(0.5, 2)
+    tanhx = el.tanh(x)
+    assert(tanhx.val == pytest.approx(0.462, 0.001))
+    assert(tanhx.der == pytest.approx(2*0.7864, 0.001))
 
 def test_exp2():
     assert(el.exp2(0) == pytest.approx(1))
