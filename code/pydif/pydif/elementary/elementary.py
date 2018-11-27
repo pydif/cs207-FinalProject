@@ -72,13 +72,13 @@ def arccosh(x):
     try:
         return Dual(np.arccosh(x.val), x.der * (1/np.sqrt(x.val -1) * 1/(np.sqrt(x.val +1))))
     except:
-        np.arccosh(x)
+        return np.arccosh(x)
 
 def arctanh(x):
     try:
         return Dual(np.arctanh(x.val), -1 * x.der * 1/(x.val**2 -1))
     except:
-        np.arctanh(x)
+        return np.arctanh(x)
 
 def exp(x):
     try:
@@ -114,3 +114,8 @@ def log10(x):
         return np.log10(x)
 
 
+def sqrt(x):
+    try:
+        return Dual(np.sqrt(x.val), x.der * 1/(2*np.sqrt(x.val)))
+    except:
+        return np.sqrt(x)
