@@ -130,3 +130,24 @@ def test_sqrt():
     sqrtx = el.sqrt(x)
     assert(sqrtx.val == pytest.approx(2.6457, 0.001))
     assert(sqrtx.der == pytest.approx(0.5669, 0.001))
+
+def test_sigmoid():
+    assert(el.sigmoid(5) == pytest.approx(0.9933, 0.001))
+    x = Dual(2, 3)
+    sigmoidx = el.sigmoid(x)
+    assert(sigmoidx.val == pytest.approx(0.8807, 0.001))
+    assert(sigmoidx.der == pytest.approx(0.10499*3, 0.001 ))
+
+def test_relu():
+    assert(el.relu(5) == 5)
+    assert(el.relu(-5) == 0)
+    x = Dual(2, 3)
+    y = Dual(-2, 3)
+    relux = el.relu(x)
+    reluy = el.relu(y)
+    assert(relux.val == 2)
+    assert(relux.der == 3)
+    print(reluy.val )
+    print(reluy.der)
+    assert(reluy.val == 0)
+    assert(reluy.der == 0)

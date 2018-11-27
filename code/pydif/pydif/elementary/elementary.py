@@ -119,3 +119,19 @@ def sqrt(x):
         return Dual(np.sqrt(x.val), x.der * 1/(2*np.sqrt(x.val)))
     except:
         return np.sqrt(x)
+
+def sigmoid(x):
+    try:
+        a = x.val
+        return 1/(1 + exp(-1*x))
+    except:
+        return 1/(1+ np.exp(-1 * x))
+
+def relu(x):
+    try:
+        u = np.maximum(0, x.val)
+        v = np.where(u > 0, 1, 0)
+        return Dual(u, x.der * v)
+    except:
+        return np.maximum(0, x)
+
