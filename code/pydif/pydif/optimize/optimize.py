@@ -2,6 +2,7 @@ import sys
 import os
 import numpy as np
 from inspect import signature
+from collections import Iterable
 sys.path.append(os.path.join(os.getcwd(),'pydif'))
 from pydif.pydif import autodiff
 
@@ -20,6 +21,10 @@ class optimize():
         iters = 0 
         dfdx = autodiff(self.func)
         val = dfdx.get_val(init_pos)
+
+        if isinstance(val, Iterable):
+            raise ValueError("THe optimize class only optimizes scalar valued functions")
+
         prev_step_size = 100 + precision
         while (prev_step_size > precision and iters < max_iters):
             jac = dfdx.get_der(cur_pos, jacobian=True)
