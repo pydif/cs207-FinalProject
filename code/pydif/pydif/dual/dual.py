@@ -18,7 +18,7 @@ class Dual():
     def __init__(self, val , der, der2):
         self.val = val
         self.der = np.array(der)
-        self.der2 = np.array(de2)
+        self.der2 = np.array(der2)
 
     #overload the addition method
     def __add__(self, x):
@@ -50,7 +50,7 @@ class Dual():
         try:
             return Dual(self.val * x.val, self.der * x.val + self.val * x.der, self.der2 * x.val + self.val * x.der2)
         except AttributeError:
-            return Dual(self.val *  x, self.der *  x, self.der2 *  x))
+            return Dual(self.val *  x, self.der *  x, self.der2 *  x)
 
     #overload rmul by calling multiplication on the Dual number
     def __rmul__(self, x):

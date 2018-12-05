@@ -9,7 +9,7 @@ def test_cos():
     cosx = el.cos(x)
     assert(cosx.val == pytest.approx(0.2836, 0.001)) 
     assert(cosx.der == pytest.approx(7.671, 0.001))
-    assert(cosx.der2 == pytest.approx(-16.236, 0.001))
+    assert(cosx.der2 == pytest.approx(-17.1954, 0.001))
 
 def test_sin():
     assert(el.sin(3) == pytest.approx(0.1411, 0.001))
@@ -43,7 +43,7 @@ def test_arcsin():
 
 def test_arccos():
     assert(el.arccos(0.9) == pytest.approx(0.451, 0.001))
-    x = Dual(0.5, 2)
+    x = Dual(0.5, 2, 1)
     arccosx = el.arccos(x)
     assert(arccosx.val == pytest.approx(1.047, 0.001))
     assert(arccosx.der == pytest.approx( -2 *1.1547, 0.001))
@@ -57,7 +57,7 @@ def test_arctan():
 
 def test_sinh():
     assert(el.sinh(0.7) == pytest.approx(0.7585, 0.001))
-    x = Dual(0.5, 2)
+    x = Dual(0.5, 2, 1)
     sinhx = el.sinh(x)
     assert(sinhx.val == pytest.approx(0.5210, 0.001))
     assert(sinhx.der == pytest.approx(2 * 1.127, 0.001))

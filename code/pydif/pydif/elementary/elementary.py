@@ -58,7 +58,7 @@ def cosh(x):
 
 def tanh(x):
     try:
-        return Dual(np.tanh(x.val), x.der * 1/(np.cosh(x.val)**2), (1/np.coshx.val)**2 * (x.der2 - 2*x.der**2 * np.tanh(x)))
+        return Dual(np.tanh(x.val), x.der * 1/(np.cosh(x.val)**2), (1/np.cosh(x.val))**2 * (x.der2 - 2*x.der**2 * np.tanh(x.val)))
     except:
         return np.tanh(x)
 
@@ -88,7 +88,7 @@ def exp(x):
 
 def exp2(x):
     try:
-        return Dual(np.exp2(x.val), np.exp2(x.val) * (x.der * np.log(2)), np.log(2)*np.exp2(x.val)(x.der2 + np.log(2) * x.der**2))
+        return Dual(np.exp2(x.val), np.exp2(x.val) * (x.der * np.log(2)), np.log(2)*np.exp2(x.val)*(x.der2 + np.log(2) * x.der**2))
     except:
         return np.exp2(x)
 
