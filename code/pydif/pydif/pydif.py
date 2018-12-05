@@ -40,7 +40,7 @@ class autodiff():
             else:
                 params = Dual(pos,1)
             return self.func(params)
-    
+
     #check that the specified iterable is the same shape as the function (specified at object creation) input
     def _check_dim(self, item):
         badDimentionsMsg = 'poorly formatted position or direction. should be of length {}.'.format(self.num_params)
@@ -98,7 +98,7 @@ class autodiff():
             if isinstance(res, collections.Iterable):
                 return np.sum(np.array([i.der for i in res]) * direction)
             else:
-                return res.der    
+                return res.der
 
 
 if __name__ == '__main__':
