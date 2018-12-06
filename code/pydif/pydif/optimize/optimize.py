@@ -10,7 +10,7 @@ class optimize():
     def __init__(self, func):
         self.func = func
 
-    def gradient_descent(self, init_pos, step_size=0.1, max_iters=100, precision=0.001):
+    def gradient_descent(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_iters=False):
 
         num_params = len(signature(self.func).parameters)
         badDimentionsMsg = 'poorly formatted initial position. should be of length {}.'.format(num_params)
@@ -33,4 +33,7 @@ class optimize():
             prev_step_size = np.linalg.norm(abs(cur_pos - prev_pos))
             iters += 1
 
-        return cur_pos
+        if return_iters:
+            return cur_pos, iters
+        else:
+            return cur_pos
