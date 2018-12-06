@@ -30,15 +30,15 @@ class autodiff():
                 for cursor, pos_i in enumerate(pos):
                     der_partials = np.zeros(self.num_params)
                     der_partials[cursor] = 1
-                    params.append(Dual(pos_i, der_partials))
+                    params.append(Dual(pos_i, der_partials, np.zeros(self.num_params)))
             else:
-                params = [Dual(pos_i,1) for pos_i in pos]
+                params = [Dual(pos_i,1,0) for pos_i in pos]
             return self.func(*params)
         else:
             if jacobian:
-                params = Dual(pos,[1])
+                params = Dual(pos,[1],[0])
             else:
-                params = Dual(pos,1)
+                params = Dual(pos,1,0)
             return self.func(params)
 
     #check that the specified iterable is the same shape as the function (specified at object creation) input
