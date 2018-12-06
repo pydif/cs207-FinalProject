@@ -3,7 +3,8 @@ This file overloads operators dunder methods to allow for dual numbers to be use
 with x as a dual number and falls back to treating x as a normal numerical type
 Args:
     param1 (float): The value of a function at a point.
-    param2 (array or array-like): An array of partial derivatives at a point
+    param2 (array or array-like): An array of partial first derivatives at a point
+    param2 (array or array-like): An array of partial second derivatives at a point
 
 Returns:
     Dual Number Object: Returns a new Dual number object with the above parameters.
@@ -14,16 +15,17 @@ import numpy as np
 class Dual():
 
     #initialize derivative as a numpy array to handle partial derivatives
-    def __init__(self, val , der):
+    def __init__(self, val , der, der2):
         self.val = val
         self.der = np.array(der)
+        self.der2 = np.array(der2)
 
     #overload the addition method
     def __add__(self, x):
         try:
-            return Dual(self.val +  x.val, self.der +  x.der)
+            return Dual(self.val +  x.val, self.der +  x.der, self.der2 +  x.der2)
         except AttributeError:
-            return Dual(self.val +  x, self.der)
+            return Dual(self.val +  x, self.der, self.der2)
 
     #overload radd by calling addition on the Dual number
     def __radd__(self, x):
@@ -32,23 +34,23 @@ class Dual():
     #overload the subtraction method
     def __sub__(self, x):
         try:
-            return Dual(self.val -  x.val, self.der -  x.der)
+            return Dual(self.val -  x.val, self.der -  x.der, self.der2 -  x.der2)
         except AttributeError:
-            return Dual(self.val -  x, self.der)
+            return Dual(self.val -  x, self.der, self.der2)
 
     #overload rsub
     def __rsub__(self, x):
         try:
-            return Dual(self.val -  x.val, self.der -  x.der)
+            return Dual(self.val -  x.val, self.der -  x.der, self.der2 -  x.der2)
         except AttributeError:
             return Dual(x - self.val, self.der)
 
     #overload multiplication
     def __mul__(self, x):
         try:
-            return Dual(self.val * x.val, self.der * x.val + self.val * x.der)
+            return Dual(self.val * x.val, self.der * x.val + self.val * x.der, self.der2 * x.val + self.val * x.der2)
         except AttributeError:
-            return Dual(self.val *  x, self.der *  x)
+            return Dual(self.val *  x, self.der *  x, self.der2 *  x)
 
     #overload rmul by calling multiplication on the Dual number
     def __rmul__(self, x):
@@ -57,9 +59,9 @@ class Dual():
     #overload division
     def __truediv__(self, x):
         try:
-            return Dual(self.val/ x.val, (self.der* x.val - self.val * x.der)/(x.val)**2)
+            return Dual(self.val/ x.val, (self.der* x.val - self.val * x.der)/(x.val)**2, (self.der2* x.val - self.val * x.der2)/(x.val)**2)
         except AttributeError:
-            return Dual(self.val /x, self.der / x)
+            return Dual(self.val /x, self.der / x, self.der2 / x)
 
     #overload rdivision by multiplying by the value to the negative first power
     def __rtruediv__(self, x):
@@ -68,29 +70,29 @@ class Dual():
     #overload power operator using formula for derivative of a function raised to a function if both are dual numbers
     def __pow__(self, x):
         try:
-            return Dual(self.val**x.val, self.val**x.val*(self.der*(x.val/self.val)+x.der*np.log(self.val)))
+            return Dual(self.val**x.val, self.val**x.val*(self.der*(x.val/self.val)+x.der*np.log(self.val)), self.val**x.val*(self.der2*(x.val/self.val)+x.der2*np.log(self.val)))
         except AttributeError:
-            return Dual(self.val**x, self.val**x*(self.der*(x)/(self.val)))
+            return Dual(self.val**x, self.val**x*(self.der*(x)/(self.val)), self.val**x*(self.der2*(x)/(self.val)))
 
     #overload rpow similarly to above
     def __rpow__(self, x):
         try:
-            return Dual(self.val**x, self.val**x*x.der*np.log(self.val))
+            return Dual(self.val**x, self.val**x*x.der*np.log(self.val), self.val**x*x.der2*np.log(self.val))
             #raise AttributeError
         except AttributeError:
-            return Dual(x**self.val, x**self.val*(self.der*np.log(x)))
+            return Dual(x**self.val, x**self.val*(self.der*np.log(x)), x**self.val*(self.der2*np.log(x)))
 
     #overload negation
     def __neg__(self):
         try:
-            return Dual(-self.val, -self.der)
+            return Dual(-self.val, -self.der, -self.der2)
         except AttributeError:
             return -self
 
     #overload equality
     def __eq__(self, x):
         try:
-            if self.val == x.val and self.der == x.der:
+            if self.val == x.val and self.der == x.der and self.der2 == x.der2:
                 return True
             else:
                 return False
@@ -103,7 +105,7 @@ class Dual():
     #overload inequality
     def __neq__(self, x):
         try:
-            if self.val != x.val or self.der != x.der:
+            if self.val != x.val or self.der != x.der or self.der2 != x.der2:
                 return True
             else:
                 return False
@@ -112,7 +114,7 @@ class Dual():
                 return True
             else:
                 return False
-                
+
     #overload repr by displaying as a list where the first value is the value and the second is a derivative
     def __repr__(self):
-        return '[{0},{1}]'.format(self.val, self.der)
+        return '[{0},{1}, {2}]'.format(self.val, self.der, self.der2)
