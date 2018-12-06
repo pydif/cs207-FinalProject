@@ -30,15 +30,15 @@ class autodiff():
                 for cursor, pos_i in enumerate(pos):
                     der_partials = np.zeros(self.num_params)
                     der_partials[cursor] = 1
-                    params.append(Dual(pos_i, der_partials))
+                    params.append(Dual(pos_i, der_partials, np.zeros(self.num_params)))
             else:
-                params = [Dual(pos_i,1) for pos_i in pos]
+                params = [Dual(pos_i,1,0) for pos_i in pos]
             return self.func(*params)
         else:
             if jacobian:
-                params = Dual(pos,[1])
+                params = Dual(pos,[1],[0])
             else:
-                params = Dual(pos,1)
+                params = Dual(pos,1,0)
             return self.func(params)
 
     #check that the specified iterable is the same shape as the function (specified at object creation) input
@@ -100,6 +100,38 @@ class autodiff():
             else:
                 return res.der
 
+class autodiff_vector():
+
+    #initialize autodiff vector with autodiff objects
+    def __init__(self, funcs):
+        funcs = np.array(funcs)
+        self.func_vector = np.empty(funcs.shape, dtype=object)
+        for cursor, func in np.ndenumerate(funcs):
+            self.func_vector[cursor] = autodiff(func)
+
+    def _clean_dim(self, param, req_dim):
+        if isinstance(param, collections.Iterable):
+            return param[:req_dim]
+        else:
+            return param
+
+    #evaluate the value of the vector function at a specified position
+    def get_val(self, pos, direction=None):
+        res = np.empty(self.func_vector.shape, dtype=object)
+        for cursor, autodiff_obj in np.ndenumerate(self.func_vector):
+            clean_pos = self._clean_dim(pos, self.func_vector[cursor].num_params)
+            clean_direction = self._clean_dim(direction, self.func_vector[cursor].num_params)
+            res[cursor] = autodiff_obj.get_val(clean_pos, clean_direction)            
+        return res
+
+    #evaluate the derivative of the vector function at a specified position in a specified direction
+    def get_der(self, pos, jacobian = False, direction=None):
+        res = np.empty(self.func_vector.shape, dtype=object)
+        for cursor, autodiff_obj in np.ndenumerate(self.func_vector):
+            clean_pos = self._clean_dim(pos, self.func_vector[cursor].num_params)
+            clean_direction = self._clean_dim(direction, self.func_vector[cursor].num_params)
+            res[cursor] = autodiff_obj.get_der(clean_pos, jacobian, clean_direction)
+        return res
 
 if __name__ == '__main__':
     pass

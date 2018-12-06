@@ -100,6 +100,35 @@ def test_get_val():
     assert(ad2.get_val(pos2, direction=None) == pos2)
     assert(ad2.get_val(pos2, direction=dir2) == pos2[1])
 
+def test_get_val_vector():
+    def f1(x):
+        return x
+    def f2(x, y):
+        return x, y
+
+    ad1 = pydif.autodiff_vector([[f1, f2], [f2, f1]])
+    ad2 = pydif.autodiff_vector([f2, f2, f2, f2])
+
+    pos1 = 3
+    pos2 = [3,4]
+    dir1 = [1]
+    dir2 = [0,1]
+    dir3 = [1,0]
+
+    res = ad1.get_val(pos2, direction=None)
+    assert(res[0][0] == res[1][1] == pos1)
+    assert(res[0][1] == res[1][0] == pos2)
+
+    res = ad1.get_val(pos2, direction=dir3)
+    assert(res[0][0] == res[1][1] == pos1)
+    assert(res[0][1] == res[1][0] == pos2[0])
+
+    res = ad2.get_val(pos2, direction=None)
+    assert(res[0] == res[1] == res[2] == res[3] == pos2)
+
+    res = ad2.get_val(pos2, direction=dir2)
+    assert(res[0] == res[1] == res[2] == res[3] == pos2[1])
+
 def test_get_der():
     def f1(x):
         return x
@@ -119,6 +148,36 @@ def test_get_der():
 
     assert(ad2.get_der(pos2, direction=None) == [1,1])
     assert(ad2.get_der(pos2, direction=dir2) == 1)
+
+def test_get_der_vector():
+    def f1(x):
+        return x
+    def f2(x, y):
+        return x, y
+
+    ad1 = pydif.autodiff_vector([[f1, f2], [f2, f1]])
+    ad2 = pydif.autodiff_vector([f2, f2, f2, f2])
+
+    pos1 = 3
+    pos2 = [3,4]
+    dir1 = [1]
+    dir2 = [0,1]
+    dir3 = [1,0]
+
+    res = ad1.get_der(pos2, direction=None)
+    assert(res[0][0] == res[1][1] == 1)
+    assert(res[0][1] == res[1][0] == [1,1])
+
+    res = ad1.get_der(pos2, direction=dir3)
+    assert(res[0][0] == res[1][1] == 1)
+    assert(res[0][1] == res[1][0] == 1)
+
+    res = ad2.get_der(pos2, direction=None)
+    assert(res[0] == res[1] == res[2] == res[3] == [1,1])
+
+    res = ad2.get_der(pos2, direction=dir2)
+    assert(res[0] == res[1] == res[2] == res[3] == 1)
+
 
 def test_multiply_add_simple():
     alpha = 2
