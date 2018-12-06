@@ -34,7 +34,7 @@ def test_rsub():
     y = Dual(3, [0, 1], [0, 1])
     z = x - y
 
-    assert(z.val == -1)
+    assert(z == -1)
     assert(all(z.der == [0, 1]))
     assert(all(z.der2 == [0, 1]))
 
@@ -128,8 +128,8 @@ def test_eq():
     assert(result == True)
 
 def test_neq():
-    x = Dual(10, [1, 1], [1,0])
-    y = Dual(10, [1, 0], [1,0])
-    result = (x == y)
+    x = Dual(10, [1, 0], [1,0])
+    y = Dual(10, [0, 1], [1,0])
+    result = (x != y)
 
-    assert(result == False)
+    assert(result == True)

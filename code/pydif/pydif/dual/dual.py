@@ -43,7 +43,7 @@ class Dual():
         try:
             return Dual(self.val -  x.val, self.der -  x.der, self.der2 -  x.der2)
         except AttributeError:
-            return Dual(x - self.val, self.der)
+            return Dual(x - self.val, self.der, self.der2)
 
     #overload multiplication
     def __mul__(self, x):
@@ -92,29 +92,23 @@ class Dual():
     #overload equality
     def __eq__(self, x):
         try:
-            if self.val == x.val and self.der == x.der and self.der2 == x.der2:
+            if self.val == x.val and np.array_equal(self.der, x.der) and np.array_equal(self.der2, x.der2):
                 return True
             else:
                 return False
         except: #if not Dual, compare to value
-            if self.val == x:
-                return True
-            else:
-                return False
+            return self.val == x
 
     #overload inequality
     def __neq__(self, x):
         try:
-            if self.val != x.val or self.der != x.der or self.der2 != x.der2:
+            if self.val != x.val or (np.array_equal(self.der, x.der) == False) or (np.array_equal(self.der2, x.der2) == False):
                 return True
             else:
                 return False
         except: #if not Dual, compare to value
-            if self.val != x:
-                return True
-            else:
-                return False
+            return (self.val != x)
 
     #overload repr by displaying as a list where the first value is the value and the second is a derivative
     def __repr__(self):
-        return '[{0},{1}, {2}]'.format(self.val, self.der, self.der2)
+        return '[{0}, {1}, {2}]'.format(self.val, self.der, self.der2)
