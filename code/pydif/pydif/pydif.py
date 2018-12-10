@@ -128,7 +128,7 @@ class autodiff_vector():
         for cursor, autodiff_obj in np.ndenumerate(self.func_vector):
             clean_pos = self._clean_dim(pos, self.func_vector[cursor].num_params)
             clean_direction = self._clean_dim(direction, self.func_vector[cursor].num_params)
-            res[cursor] = autodiff_obj.get_val(clean_pos, clean_direction)            
+            res[cursor] = autodiff_obj.get_val(clean_pos, clean_direction)
         return res
 
     #evaluate the derivative of the vector function at a specified position in a specified direction
