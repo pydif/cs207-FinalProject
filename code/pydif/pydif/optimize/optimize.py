@@ -27,7 +27,7 @@ class optimize():
 
         prev_step_size = 100 + precision
         while (prev_step_size > precision and iters < max_iters):
-            jac = dfdx.get_der(cur_pos, jacobian=True)
+            jac = dfdx.get_der(cur_pos, wrt_variables=True)
             prev_pos = cur_pos
             cur_pos = cur_pos - step_size * jac
             prev_step_size = np.linalg.norm(abs(cur_pos - prev_pos))

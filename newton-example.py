@@ -18,7 +18,7 @@ max_it = 100 # Just stop if a root isn't found after 100 iterations
 
 root = None # Initialize root
 for k in range(max_it):
-    delta_xk = -f(xk) / dfdx.get_der(xk, jacobian=True)[0] #there is only 1 partial derivative that we care about
+    delta_xk = -f(xk) / dfdx.get_der(xk, wrt_variables=True)[0] #there is only 1 partial derivative that we care about
     if (abs(delta_xk) <= tol): # Stop iteration if solution found
         root = xk + delta_xk
         print("Found root at x = {0:17.16f} after {1} iteratons.".format(root, k+1))
