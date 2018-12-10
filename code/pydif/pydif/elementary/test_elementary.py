@@ -40,17 +40,17 @@ def test_arcsin():
     assert(el.arcsin(1) == pytest.approx(1.570, 0.001))
     x = Dual(0.5, 2, 2)
     arcsinx = el.arcsin(x)
-    assert(arcsinx.val == pytest.approx(0.5235, 0.001))
-    assert(arcsinx.der == pytest.approx(1.154*2, 0.001))
-    assert(arcsinx.der2 == pytest.approx(5.3886, 0.001))
+    assert(arcsinx.val == pytest.approx(0.5235, 0.01))
+    assert(arcsinx.der == pytest.approx(1.154*2, 0.01))
+    assert(arcsinx.der2 == pytest.approx(5.3886, 0.01))
 
 def test_arccos():
     assert(el.arccos(0.9) == pytest.approx(0.451, 0.001))
     x = Dual(0.5, 2, 4)
     arccosx = el.arccos(x)
-    assert(arccosx.val == pytest.approx(1.047, 0.001))
-    assert(arccosx.der == pytest.approx( -2 *1.1547, 0.001))
-    assert(arccosx.der2 == pytest.approx(-7.698, 0.001))
+    assert(arccosx.val == pytest.approx(1.047, 0.01))
+    assert(arccosx.der == pytest.approx( -2 *1.1547, 0.01))
+    assert(arccosx.der2 == pytest.approx(-7.698, 0.01))
 
 def test_arctan():
     assert(el.arctan(0.75) == pytest.approx(0.6435, 0.001))
@@ -64,9 +64,9 @@ def test_sinh():
     assert(el.sinh(0.7) == pytest.approx(0.7585, 0.001))
     x = Dual(0.5, 2, 3)
     sinhx = el.sinh(x)
-    assert(sinhx.val == pytest.approx(0.5210, 0.001))
-    assert(sinhx.der == pytest.approx(2 * 1.127, 0.001))
-    assert(sinhx.der2 == pytest.approx(5.467, 0.001))
+    assert(sinhx.val == pytest.approx(0.5210, 0.01))
+    assert(sinhx.der == pytest.approx(2 * 1.127, 0.01))
+    assert(sinhx.der2 == pytest.approx(5.467, 0.01))
 
 def test_cosh():
     assert(el.cosh(0.6) == pytest.approx(1.185, 0.001))

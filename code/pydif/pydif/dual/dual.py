@@ -65,20 +65,18 @@ class Dual():
 
     #overload rdivision by multiplying by the value to the negative first power
     def __rtruediv__(self, x):
-        print(x)
-        print (self**-1)
-        return x * self**-1
+        return Dual(x/self.val, -(x * self.der)/self.val ** 2, (2 * x * self.der ** 2 - x * self.val * self.der2 )/self.val**3)
 
     #overload power operator using formula for derivative of a function raised to a function if both are dual numbers
     def __pow__(self, x):
         try:
             return Dual(self.val**x.val, self.val**x.val*(self.der*(x.val/self.val)+x.der * np.log(self.val)), self.val ** x.val * ((x.val * self.der)/self.val + np.log(self.val) * x.der) ** 2 + self.val ** x.val * ((x.val * self.der2)/self.val + (2 * self.der * x.der)/self.val - (x.val * self.der**2)/self.val**2 + np.log(self.val) * x.der2))
         except AttributeError:
-            return Dual(self.val**x, x * self.val ** 2 * self.der, x * self.val * (self.val * self.der2 + 2 * self.der ** 2))
+            return Dual(x**self.val, np.log(x) * x ** self.val  * self.der, np.log(x) * x  ** self.val * (self.der2 + np.log(x) * self.der  ** 2))
 
     #overload rpow similarly to above
     def __rpow__(self, x):
-        return Dual(self.val**x, x * self.val ** 2 * self.der, x * self.val * (self.val * self.der2 + 2 * self.der ** 2))
+        return Dual(x**self.val, np.log(x) * x ** self.val  * self.der, np.log(x) * x  ** self.val * (self.der2 + np.log(x) * self.der  ** 2))
 
     #overload negation
     def __neg__(self):

@@ -74,7 +74,7 @@ def test_rtruediv():
     assert(z.der[0] == 0)
     assert(z.der[1] == pytest.approx(-0.66666667))
     assert(z.der2[0] == 0)
-    assert(z.der2[1] == pytest.approx(-0.66666667))
+    assert(z.der2[1] == pytest.approx(-0.2222222))
 
 def test_pow():
     x = Dual(2, [1, 0], [1, 0])
