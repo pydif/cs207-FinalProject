@@ -112,7 +112,7 @@ class optimize():
         return (current_pos, hist)
 
     #function that allows for numerous initial conditions to be specified and plotted
-    def plot_opt(optimizer, initial_cond):
+    def plot_optimization(optimizer, initial_cond):
 
         #define initial conditions and plot results
         for init in initial_cond:
