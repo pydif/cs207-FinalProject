@@ -4,7 +4,7 @@ import numpy as np
 from inspect import signature
 from collections import Iterable
 sys.path.append(os.path.join(os.getcwd(),'pydif'))
-from pydif.pydif import autodiff
+from pydif.pydif.pydif import autodiff
 
 class optimize():
     def __init__(self, func):
