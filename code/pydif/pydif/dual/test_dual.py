@@ -34,7 +34,7 @@ def test_rsub():
     y = Dual(3, [0, 1], [0, 1])
     z = x - y
 
-    assert(z.val == -1)
+    assert(z == -1)
     assert(all(z.der == [0, 1]))
     assert(all(z.der2 == [0, 1]))
 
@@ -45,7 +45,7 @@ def test_mul():
 
     assert(z.val == 6)
     assert(all(z.der == [3, 2]))
-    assert(all(z.der2 == [3, 2]))
+    assert(all(z.der2 == [3, 0]))
 
 def test_rmul():
     x = 2
@@ -63,7 +63,7 @@ def test_truediv():
 
     assert(z.val == 3)
     assert(all(z.der == [0.5, -1.5]))
-    assert(all(z.der2 == [0.5, -1.5]))
+    assert(all(z.der2 == [0.5, 0]))
 
 def test_rtruediv():
     x = 6
@@ -85,15 +85,15 @@ def test_pow():
     assert(z1.val == 8)
     assert(z1.der[0] == 12)
     assert(z1.der[1] == pytest.approx(5.54517744))
-    assert(z1.der2[0] == 12)
-    assert(z1.der2[1] == pytest.approx(5.54517744))
+    assert(z1.der2[0] == 24)
+    assert(z1.der2[1] == pytest.approx(9.38880156))
 
     z2 = x**x
 
     assert(z2.val == 4)
     assert(z2.der[0] == pytest.approx(6.77258872))
     assert(z2.der[1] == 0)
-    assert(z2.der2[0] == pytest.approx(6.77258872))
+    assert(z2.der2[0] == pytest.approx(20.23957822))
     assert(z2.der2[1] == 0)
 
 def test_rpow():
@@ -105,7 +105,7 @@ def test_rpow():
     assert(z.der[0] == 0)
     assert(z.der[1] == pytest.approx(5.54517744))
     assert(z.der2[0] == 0)
-    assert(z.der2[1] == pytest.approx(5.54517744))
+    assert(z.der2[1] == pytest.approx(9.38880156))
 
 def test_neg():
     x = Dual(10, [1, 0], [1, 0])
@@ -118,7 +118,7 @@ def test_neg():
 def test_repr():
     x = Dual(10, [1, 0], [1, 0])
 
-    assert(repr(x) == '[10,[1 0], [1 0]]')
+    assert(repr(x) == '[10, [1 0], [1 0]]')
 
 def test_eq():
     x = Dual(10, [1, 0], [1,0])
@@ -128,8 +128,8 @@ def test_eq():
     assert(result == True)
 
 def test_neq():
-    x = Dual(10, [1, 1], [1,0])
-    y = Dual(10, [1, 0], [1,0])
-    result = (x == y)
+    x = Dual(10, [1, 0], [1,0])
+    y = Dual(10, [0, 1], [1,0])
+    result = (x != y)
 
-    assert(result == False)
+    assert(result == True)

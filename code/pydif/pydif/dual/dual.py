@@ -43,12 +43,12 @@ class Dual():
         try:
             return Dual(self.val -  x.val, self.der -  x.der, self.der2 -  x.der2)
         except AttributeError:
-            return Dual(x - self.val, self.der)
+            return Dual(x - self.val, self.der, self.der2)
 
     #overload multiplication
     def __mul__(self, x):
         try:
-            return Dual(self.val * x.val, self.der * x.val + self.val * x.der, self.der2 * x.val + self.val * x.der2)
+            return Dual(self.val * x.val, self.der * x.val + self.val * x.der, x.val * self.der2 + 2 * self.der * x.der + self.der * x.der2)
         except AttributeError:
             return Dual(self.val *  x, self.der *  x, self.der2 *  x)
 
@@ -59,28 +59,26 @@ class Dual():
     #overload division
     def __truediv__(self, x):
         try:
-            return Dual(self.val/ x.val, (self.der* x.val - self.val * x.der)/(x.val)**2, (self.der2* x.val - self.val * x.der2)/(x.val)**2)
+            return Dual(self.val/ x.val, (self.der * x.val - self.val * x.der)/(x.val)**2, (x.val ** 2 * self.der2 - x.val * (2 * self.der * x.der + self.val * x.der2) + 2 * self.val * x.der **2)/x.val**3)
         except AttributeError:
             return Dual(self.val /x, self.der / x, self.der2 / x)
 
     #overload rdivision by multiplying by the value to the negative first power
     def __rtruediv__(self, x):
+        print(x)
+        print (self**-1)
         return x * self**-1
 
     #overload power operator using formula for derivative of a function raised to a function if both are dual numbers
     def __pow__(self, x):
         try:
-            return Dual(self.val**x.val, self.val**x.val*(self.der*(x.val/self.val)+x.der*np.log(self.val)), self.val**x.val*(self.der2*(x.val/self.val)+x.der2*np.log(self.val)))
+            return Dual(self.val**x.val, self.val**x.val*(self.der*(x.val/self.val)+x.der * np.log(self.val)), self.val ** x.val * ((x.val * self.der)/self.val + np.log(self.val) * x.der) ** 2 + self.val ** x.val * ((x.val * self.der2)/self.val + (2 * self.der * x.der)/self.val - (x.val * self.der**2)/self.val**2 + np.log(self.val) * x.der2))
         except AttributeError:
-            return Dual(self.val**x, self.val**x*(self.der*(x)/(self.val)), self.val**x*(self.der2*(x)/(self.val)))
+            return Dual(self.val**x, x * self.val ** 2 * self.der, x * self.val * (self.val * self.der2 + 2 * self.der ** 2))
 
     #overload rpow similarly to above
     def __rpow__(self, x):
-        try:
-            return Dual(self.val**x, self.val**x*x.der*np.log(self.val), self.val**x*x.der2*np.log(self.val))
-            #raise AttributeError
-        except AttributeError:
-            return Dual(x**self.val, x**self.val*(self.der*np.log(x)), x**self.val*(self.der2*np.log(x)))
+        return Dual(self.val**x, x * self.val ** 2 * self.der, x * self.val * (self.val * self.der2 + 2 * self.der ** 2))
 
     #overload negation
     def __neg__(self):
@@ -92,29 +90,23 @@ class Dual():
     #overload equality
     def __eq__(self, x):
         try:
-            if self.val == x.val and self.der == x.der and self.der2 == x.der2:
+            if self.val == x.val and np.array_equal(self.der, x.der) and np.array_equal(self.der2, x.der2):
                 return True
             else:
                 return False
         except: #if not Dual, compare to value
-            if self.val == x:
-                return True
-            else:
-                return False
+            return self.val == x
 
     #overload inequality
     def __neq__(self, x):
         try:
-            if self.val != x.val or self.der != x.der or self.der2 != x.der2:
+            if self.val != x.val or (np.array_equal(self.der, x.der) == False) or (np.array_equal(self.der2, x.der2) == False):
                 return True
             else:
                 return False
         except: #if not Dual, compare to value
-            if self.val != x:
-                return True
-            else:
-                return False
+            return (self.val != x)
 
     #overload repr by displaying as a list where the first value is the value and the second is a derivative
     def __repr__(self):
-        return '[{0},{1}, {2}]'.format(self.val, self.der, self.der2)
+        return '[{0}, {1}, {2}]'.format(self.val, self.der, self.der2)

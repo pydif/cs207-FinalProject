@@ -1,13 +1,13 @@
 from pydif.elementary import elementary as el
 import pytest
-# from ..dual.dual import Dual 
+# from ..dual.dual import Dual
 from pydif.dual.dual import Dual
 
 def test_cos():
     assert(el.cos(5) == pytest.approx(0.2836, 0.001))
     x = Dual(5, 8, 1)
     cosx = el.cos(x)
-    assert(cosx.val == pytest.approx(0.2836, 0.001)) 
+    assert(cosx.val == pytest.approx(0.2836, 0.001))
     assert(cosx.der == pytest.approx(7.671, 0.001))
     assert(cosx.der2 == pytest.approx(-17.1954, 0.001))
 
@@ -15,7 +15,7 @@ def test_sin():
     assert(el.sin(3) == pytest.approx(0.1411, 0.001))
     x = Dual(3, 3, 1)
     sinx = el.sin(x)
-    assert(sinx.val == pytest.approx(0.1411, 0.001)) 
+    assert(sinx.val == pytest.approx(0.1411, 0.001))
     assert(sinx.der == pytest.approx(-2.9699, 0.001))
     assert(sinx.der2 == pytest.approx(-2.260, 0.001))
 
@@ -42,8 +42,8 @@ def test_arcsin():
     arcsinx = el.arcsin(x)
     assert(arcsinx.val == pytest.approx(0.5235, 0.001))
     assert(arcsinx.der == pytest.approx(1.154*2, 0.001))
-    assert(arcsinx.der2 == pytest.approx(5.3886, 0.001))
-
+    assert(arcsinx.der2 == pytest.approx(5.3886, 0.001)
+           
 def test_arccos():
     assert(el.arccos(0.9) == pytest.approx(0.451, 0.001))
     x = Dual(0.5, 2, 4)
