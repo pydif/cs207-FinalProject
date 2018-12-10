@@ -80,15 +80,22 @@ class autodiff():
                 return res.val
 
     #evaluate the derivatives of the function at a specified position in a specified direction
-    def get_der(self, pos, jacobian = False, direction=None):
+    def get_der(self, pos, jacobian = False, direction=None, order=1):
+        if order == 1:
+            der_attr = 'der'
+        elif order == 2:
+            der_attr = 'der2'
+        else:
+            raise NotImplementedError('only first and second order derivatives are implemented.')
+
         if direction is None:
             self._check_dim(pos)
             res = self._eval(pos, jacobian)
 
             if isinstance(res, collections.Iterable):
-                return [i.der for i in res]
+                return [getattr(i, der_attr) for i in res]
             else:
-                return res.der
+                return getattr(res, der_attr)
         else:
             self._check_dim(pos)
             self._check_dim(direction)
@@ -96,9 +103,9 @@ class autodiff():
             res = self._eval(pos, jacobian)
 
             if isinstance(res, collections.Iterable):
-                return np.sum(np.array([i.der for i in res]) * direction)
+                return np.sum(np.array([getattr(i, der_attr) for i in res]) * direction)
             else:
-                return res.der
+                return getattr(res, der_attr)
 
 class autodiff_vector():
 
@@ -125,12 +132,12 @@ class autodiff_vector():
         return res
 
     #evaluate the derivative of the vector function at a specified position in a specified direction
-    def get_der(self, pos, jacobian = False, direction=None):
+    def get_der(self, pos, jacobian = False, direction=None, order=1):
         res = np.empty(self.func_vector.shape, dtype=object)
         for cursor, autodiff_obj in np.ndenumerate(self.func_vector):
             clean_pos = self._clean_dim(pos, self.func_vector[cursor].num_params)
             clean_direction = self._clean_dim(direction, self.func_vector[cursor].num_params)
-            res[cursor] = autodiff_obj.get_der(clean_pos, jacobian, clean_direction)
+            res[cursor] = autodiff_obj.get_der(clean_pos, jacobian, clean_direction, order)
         return res
 
 if __name__ == '__main__':
