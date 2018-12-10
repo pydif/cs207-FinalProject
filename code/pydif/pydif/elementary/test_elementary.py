@@ -42,8 +42,8 @@ def test_arcsin():
     arcsinx = el.arcsin(x)
     assert(arcsinx.val == pytest.approx(0.5235, 0.001))
     assert(arcsinx.der == pytest.approx(1.154*2, 0.001))
-    assert(arcsinx.der2 == pytest.approx(5.3886, 0.001)
-           
+    assert(arcsinx.der2 == pytest.approx(5.3886, 0.001))
+
 def test_arccos():
     assert(el.arccos(0.9) == pytest.approx(0.451, 0.001))
     x = Dual(0.5, 2, 4)
