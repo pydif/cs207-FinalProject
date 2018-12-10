@@ -116,7 +116,7 @@ class optimize():
 
         #define initial conditions and plot results
         for init in initial_cond:
-            min_val, total_it, hist = optimizer(init[0], init[1]) #call optimization function
+            min_val, total_it, hist = self.optimizer(init[0], init[1]) #call optimization function
             hist = np.array(hist)
 
             #format plot
