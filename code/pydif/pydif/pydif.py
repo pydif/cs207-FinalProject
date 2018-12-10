@@ -23,9 +23,9 @@ class autodiff():
         self.num_params = len(signature(func).parameters)
 
     #make function parameters dual numbers and evaluate function at a position
-    def _eval(self, pos, jacobian = False):
+    def _eval(self, pos, wrt_variables = False):
         if isinstance(pos, collections.Iterable):
-            if jacobian:
+            if wrt_variables:
                 params = []
                 for cursor, pos_i in enumerate(pos):
                     der_partials = np.zeros(self.num_params)
@@ -35,7 +35,7 @@ class autodiff():
                 params = [Dual(pos_i,1,0) for pos_i in pos]
             return self.func(*params)
         else:
-            if jacobian:
+            if wrt_variables:
                 params = Dual(pos,[1],[0])
             else:
                 params = Dual(pos,1,0)
@@ -80,7 +80,7 @@ class autodiff():
                 return res.val
 
     #evaluate the derivatives of the function at a specified position in a specified direction
-    def get_der(self, pos, jacobian = False, direction=None, order=1):
+    def get_der(self, pos, wrt_variables = False, direction=None, order=1):
         if order == 1:
             der_attr = 'der'
         elif order == 2:
@@ -90,7 +90,7 @@ class autodiff():
 
         if direction is None:
             self._check_dim(pos)
-            res = self._eval(pos, jacobian)
+            res = self._eval(pos, wrt_variables)
 
             if isinstance(res, collections.Iterable):
                 return [getattr(i, der_attr) for i in res]
@@ -100,7 +100,7 @@ class autodiff():
             self._check_dim(pos)
             self._check_dim(direction)
             self._enforce_unitvector(direction)
-            res = self._eval(pos, jacobian)
+            res = self._eval(pos, wrt_variables)
 
             if isinstance(res, collections.Iterable):
                 return np.sum(np.array([getattr(i, der_attr) for i in res]) * direction)
@@ -132,12 +132,12 @@ class autodiff_vector():
         return res
 
     #evaluate the derivative of the vector function at a specified position in a specified direction
-    def get_der(self, pos, jacobian = False, direction=None, order=1):
+    def get_der(self, pos, wrt_variables = False, direction=None, order=1):
         res = np.empty(self.func_vector.shape, dtype=object)
         for cursor, autodiff_obj in np.ndenumerate(self.func_vector):
             clean_pos = self._clean_dim(pos, self.func_vector[cursor].num_params)
             clean_direction = self._clean_dim(direction, self.func_vector[cursor].num_params)
-            res[cursor] = autodiff_obj.get_der(clean_pos, jacobian, clean_direction, order)
+            res[cursor] = autodiff_obj.get_der(clean_pos, wrt_variables, clean_direction, order)
         return res
 
 if __name__ == '__main__':

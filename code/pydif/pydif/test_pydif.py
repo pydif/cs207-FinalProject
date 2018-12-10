@@ -70,19 +70,19 @@ def test_eval():
     pos1 = 3
     pos2 = [3,4]
 
-    assert(ad1._eval(pos1, jacobian=False).val == pos1)
-    assert(ad1._eval(pos1, jacobian=False).der == 1)
-    assert(ad1._eval(pos1, jacobian=False).der2 == 0)
-    assert(ad1._eval(pos1, jacobian=True).val == pos1)
-    assert(ad1._eval(pos1, jacobian=True).der == 1)
-    assert(ad1._eval(pos1, jacobian=True).der2 == 0)
+    assert(ad1._eval(pos1, wrt_variables=False).val == pos1)
+    assert(ad1._eval(pos1, wrt_variables=False).der == 1)
+    assert(ad1._eval(pos1, wrt_variables=False).der2 == 0)
+    assert(ad1._eval(pos1, wrt_variables=True).val == pos1)
+    assert(ad1._eval(pos1, wrt_variables=True).der == 1)
+    assert(ad1._eval(pos1, wrt_variables=True).der2 == 0)
 
-    assert(ad2._eval(pos2, jacobian=False).val == pos2[0] + pos2[1])
-    assert(ad2._eval(pos2, jacobian=False).der == 2)
-    assert(ad2._eval(pos2, jacobian=False).der2 == 0)
-    assert(ad2._eval(pos2, jacobian=True).val == pos2[0] + pos2[1])
-    assert(all(ad2._eval(pos2, jacobian=True).der == [1,1]))
-    assert(all(ad2._eval(pos2, jacobian=True).der2 == [0,0]))
+    assert(ad2._eval(pos2, wrt_variables=False).val == pos2[0] + pos2[1])
+    assert(ad2._eval(pos2, wrt_variables=False).der == 2)
+    assert(ad2._eval(pos2, wrt_variables=False).der2 == 0)
+    assert(ad2._eval(pos2, wrt_variables=True).val == pos2[0] + pos2[1])
+    assert(all(ad2._eval(pos2, wrt_variables=True).der == [1,1]))
+    assert(all(ad2._eval(pos2, wrt_variables=True).der2 == [0,0]))
 
 def test_get_val():
     def f1(x):
@@ -287,7 +287,7 @@ def test_composite():
     der2 = -(1/12) - (np.cos(11/6)/4) #d/dy
     der3 = -(1/18) - (np.cos(11/6)/9) #d/dz
 
-    assert(np.allclose(ad1.get_der(pos,jacobian=True),[der1,der2,der3]))
+    assert(np.allclose(ad1.get_der(pos,wrt_variables=True),[der1,der2,der3]))
 
     assert(ad2.get_val(pos) == 1/(1*2*3))
     #http://www.wolframalpha.com/input/?i=d%2Fda+(1%2F(x(a)*y(a)*z(a))
@@ -297,4 +297,4 @@ def test_composite():
     der2_1 = 2/(1*2*3) #d/dx^2
     der2_2 = 2/(1*((2)**3)*3) #d/dy^2
     der2_3 = 2/(1*2*((3)**3)) #d/dz^2
-    assert(np.allclose(ad2.get_der(pos,jacobian=True,order=2),[der2_1, der2_2, der2_3]))
+    assert(np.allclose(ad2.get_der(pos,wrt_variables=True,order=2),[der2_1, der2_2, der2_3]))
