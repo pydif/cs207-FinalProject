@@ -82,7 +82,7 @@ def arctanh(x):
 
 def exp(x):
     try:
-        return Dual(np.exp(x.val), x.der * np.exp(x.val), np.exp(x.val) *(x.der2 + x.val**2))
+        return Dual(np.exp(x.val), x.der * np.exp(x.val), np.exp(x.val) * (x.der2 + x.der**2))
     except:
         return np.exp(x)
 

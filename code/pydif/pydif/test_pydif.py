@@ -70,15 +70,19 @@ def test_eval():
     pos1 = 3
     pos2 = [3,4]
 
-    assert(ad1._eval(pos1, jacobian=False).val == pos1)
-    assert(ad1._eval(pos1, jacobian=False).der == 1)
-    assert(ad1._eval(pos1, jacobian=True).val == pos1)
-    assert(ad1._eval(pos1, jacobian=True).der == 1)
+    assert(ad1._eval(pos1, wrt_variables=False).val == pos1)
+    assert(ad1._eval(pos1, wrt_variables=False).der == 1)
+    assert(ad1._eval(pos1, wrt_variables=False).der2 == 0)
+    assert(ad1._eval(pos1, wrt_variables=True).val == pos1)
+    assert(ad1._eval(pos1, wrt_variables=True).der == 1)
+    assert(ad1._eval(pos1, wrt_variables=True).der2 == 0)
 
-    assert(ad2._eval(pos2, jacobian=False).val == pos2[0] + pos2[1])
-    assert(ad2._eval(pos2, jacobian=False).der == 2)
-    assert(ad2._eval(pos2, jacobian=True).val == pos2[0] + pos2[1])
-    assert(all(ad2._eval(pos2, jacobian=True).der == [1,1]))
+    assert(ad2._eval(pos2, wrt_variables=False).val == pos2[0] + pos2[1])
+    assert(ad2._eval(pos2, wrt_variables=False).der == 2)
+    assert(ad2._eval(pos2, wrt_variables=False).der2 == 0)
+    assert(ad2._eval(pos2, wrt_variables=True).val == pos2[0] + pos2[1])
+    assert(all(ad2._eval(pos2, wrt_variables=True).der == [1,1]))
+    assert(all(ad2._eval(pos2, wrt_variables=True).der2 == [0,0]))
 
 def test_get_val():
     def f1(x):
@@ -178,6 +182,25 @@ def test_get_der_vector():
     res = ad2.get_der(pos2, direction=dir2)
     assert(res[0] == res[1] == res[2] == res[3] == 1)
 
+def test_get_der2():
+    def f1(x):
+        return x
+    def f2(x, y):
+        return x, y
+
+    ad1 = pydif.autodiff(f1)
+    ad2 = pydif.autodiff(f2)
+
+    pos1 = 3
+    pos2 = [3,4]
+    dir1 = [1]
+    dir2 = [0,1]
+
+    assert(ad1.get_der(pos1, direction=None, order=2) == 0)
+    assert(ad1.get_der(pos1, direction=dir1, order=2) == 0)
+
+    assert(ad2.get_der(pos2, direction=None, order=2) == [0,0])
+    assert(ad2.get_der(pos2, direction=dir2, order=2) == 0)
 
 def test_multiply_add_simple():
     alpha = 2
@@ -207,6 +230,10 @@ def test_multiply_add_simple():
     assert(ad3.get_der(pos) == 2)
     assert(ad4.get_der(pos) == 2)
 
+    assert(ad1.get_der(pos, order=2) == 0)
+    assert(ad1.get_der(pos, order=2) == 0)
+    assert(ad1.get_der(pos, order=2) == 0)
+    assert(ad1.get_der(pos, order=2) == 0)
 
 def test_divide_add_simple():
     alpha = 2
@@ -236,6 +263,11 @@ def test_divide_add_simple():
     assert(ad3.get_der(pos) == 0.5)
     assert(ad4.get_der(pos) == 0.5)
 
+    assert(ad1.get_der(pos, order=2) == 0.5)
+    assert(ad2.get_der(pos, order=2) == 0.5)
+    assert(ad3.get_der(pos, order=2) == 0)
+    assert(ad4.get_der(pos, order=2) == 0)
+
 def test_composite():
     pos = (1,2,3)
 
@@ -255,9 +287,14 @@ def test_composite():
     der2 = -(1/12) - (np.cos(11/6)/4) #d/dy
     der3 = -(1/18) - (np.cos(11/6)/9) #d/dz
 
-    assert(np.allclose(ad1.get_der(pos,jacobian=True),[der1,der2,der3]))
+    assert(np.allclose(ad1.get_der(pos,wrt_variables=True),[der1,der2,der3]))
 
     assert(ad2.get_val(pos) == 1/(1*2*3))
     #http://www.wolframalpha.com/input/?i=d%2Fda+(1%2F(x(a)*y(a)*z(a))
     expected_der = -((2*3 + 1*3 + 1*2)/((1**2) * (2**2) * (3**2)))
     assert(np.isclose(float(ad2.get_der(pos)), expected_der))
+
+    der2_1 = 2/(1*2*3) #d/dx^2
+    der2_2 = 2/(1*((2)**3)*3) #d/dy^2
+    der2_3 = 2/(1*2*((3)**3)) #d/dz^2
+    assert(np.allclose(ad2.get_der(pos,wrt_variables=True,order=2),[der2_1, der2_2, der2_3]))
