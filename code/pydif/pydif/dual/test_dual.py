@@ -23,8 +23,11 @@ def test_radd():
 def test_sub():
     x = Dual(2, [1, 0], [1, 0])
     y = Dual(3, [0, 1], [0, 1])
+    a = 2
     z = x - y
+    z1 = x - 2
 
+    assert(z1.val == 0)
     assert(z.val == -1)
     assert(all(z.der == [1, -1]))
     assert(all(z.der2 == [1, -1]))

@@ -80,28 +80,19 @@ class Dual():
 
     #overload negation
     def __neg__(self):
-        try:
-            return Dual(-self.val, -self.der, -self.der2)
-        except AttributeError:
-            return -self
+        return Dual(-self.val, -self.der, -self.der2)
 
     #overload equality
     def __eq__(self, x):
         try:
-            if self.val == x.val and np.array_equal(self.der, x.der) and np.array_equal(self.der2, x.der2):
-                return True
-            else:
-                return False
+            return (self.val == x.val and np.array_equal(self.der, x.der) and np.array_equal(self.der2, x.der2))
         except: #if not Dual, compare to value
             return self.val == x
 
     #overload inequality
     def __neq__(self, x):
         try:
-            if self.val != x.val or (np.array_equal(self.der, x.der) == False) or (np.array_equal(self.der2, x.der2) == False):
-                return True
-            else:
-                return False
+            return (self.val != x.val or (np.array_equal(self.der, x.der) == False) or (np.array_equal(self.der2, x.der2) == False))
         except: #if not Dual, compare to value
             return (self.val != x)
 
