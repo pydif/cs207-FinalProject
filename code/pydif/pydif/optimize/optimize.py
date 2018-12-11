@@ -4,7 +4,7 @@ import numpy as np
 from inspect import signature
 from collections import Iterable
 sys.path.append(os.path.join(os.getcwd(),'pydif'))
-from pydif.pydif.pydif import autodiff
+from pydif.pydif import autodiff
 
 class optimize():
     def __init__(self, func):
@@ -26,7 +26,7 @@ class optimize():
             raise ValueError("The optimize class only optimizes scalar valued functions")
 
         # pre allocate history array
-        hist = [current_pos]
+        hist = [cur_pos]
         prev_step_size = 100 + precision
         while (prev_step_size > precision and iters < max_iters):
             jac = dfdx.get_der(cur_pos, wrt_variables=True)
@@ -34,7 +34,7 @@ class optimize():
             cur_pos = cur_pos - step_size * jac
             prev_step_size = np.linalg.norm(abs(cur_pos - prev_pos))
             iters += 1
-            hist.append(current_pos) #store history
+            hist.append(cur_pos) #store history
         np.array(hist)
 
         if return_iters:
@@ -60,7 +60,7 @@ class optimize():
             raise ValueError("The optimize class only optimizes scalar valued functions")
 
         #preallocate arrays
-        hist = [current_pos]
+        hist = [cur_pos]
 
         #set inital conditions
         iters = 0
@@ -69,12 +69,12 @@ class optimize():
 
         #define conditions to break loop
         while ((iters <= max_iters) and (step >= precision)):
-            s = -dfdx.get_val(current_pos) #step
-            n = line_search(f, grad_f, current_pos, s)[0] #TODO replace line_search
+            s = -dfdx.get_val(cur_pos) #step
+            n = line_search(f, grad_f, cur_pos, s)[0] #TODO replace line_search
             step = np.linalg.norm(n*s) #set step size
-            current_pos = current_pos + n * s #append value after step
+            cur_pos = cur_pos + n * s #append value after step
             iters += 1 #count step
-            hist.append(current_pos) #store history
+            hist.append(cur_pos) #store history
         np.array(hist)
 
         if return_iters:
@@ -99,7 +99,7 @@ class optimize():
             raise ValueError("The optimize class only optimizes scalar valued functions")
 
         #preallocate arrays
-        hist = [current_pos]
+        hist = [cur_pos]
 
         #set inital conditions
         iters = 0
@@ -111,11 +111,11 @@ class optimize():
 
         #define conditions to break loop
         while ((iters <= max_iters) and (step >= precision)):
-            s = np.linalg.solve(hessian(current_pos), -dfdx.get_val(current_pos)) #TODO make hessian work
+            s = np.linalg.solve(hessian(cur_pos), -dfdx.get_val(cur_pos)) #TODO make hessian work
             step = np.linalg.norm(s) # get step size
-            current_pos = current_pos + s #step
+            cur_pos = cur_pos + s #step
             iters += 1 #increment counter
-            hist.append(current_pos) #store history
+            hist.append(cur_pos) #store history
         hist = np.array(hist)
 
         if return_iters:

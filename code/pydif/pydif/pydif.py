@@ -11,7 +11,7 @@ Returns:
 """
 
 from inspect import signature
-from pydif.pydif.dual.dual import Dual
+from pydif.dual.dual import Dual
 import numpy as np
 import collections
 
