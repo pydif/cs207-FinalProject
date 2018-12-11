@@ -1,6 +1,7 @@
 import pytest
 import numpy as np
 from pydif import pydif 
+from pydif.pydif import diff, diffdiff
 from pydif.elementary import elementary as el
 
 
@@ -57,6 +58,7 @@ def test_enforce_unitvector():
 
     with pytest.raises(ValueError):
         ad1._enforce_unitvector(dir5)
+
 
 def test_eval():
     def f1(x):
@@ -298,3 +300,39 @@ def test_composite():
     der2_2 = 2/(1*((2)**3)*3) #d/dy^2
     der2_3 = 2/(1*2*((3)**3)) #d/dz^2
     assert(np.allclose(ad2.get_der(pos,wrt_variables=True,order=2),[der2_1, der2_2, der2_3]))
+
+def test_decorator():
+    @diff
+    def f1d(x):
+        return x
+    @diffdiff
+    def f1dd(x):
+        return x
+
+
+    alpha=2
+
+    @diff
+    def f2d(x):
+        return alpha*x+3
+    @diffdiff
+    def f2dd(x):
+        return alpha*x+3
+
+    pos = (1,2,3)
+
+    @diff
+    def f3d(x,y,z):
+        return (1/(x*y*z)) + el.sin((1/x) + (1/y) + (1/z))
+
+    assert(f1d(3) == 1)
+    assert(f1dd(3) == 0)
+
+    assert(f2d(2) == 2)
+    assert(f2dd(2) == 0)
+
+    der1 = -(1/6) - np.cos(11/6) #d/dx
+    der2 = -(1/12) - (np.cos(11/6)/4) #d/dy
+    der3 = -(1/18) - (np.cos(11/6)/9) #d/dz
+
+    assert(np.allclose(f3d(pos),[der1,der2,der3]))

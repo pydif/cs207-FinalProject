@@ -140,5 +140,35 @@ class autodiff_vector():
             res[cursor] = autodiff_obj.get_der(clean_pos, wrt_variables, clean_direction, order)
         return res
 
+def _eval_func(func, args, der_attr):
+    if isinstance(args, collections.Iterable):
+        params = []
+        for cursor, arg in enumerate(args):
+            der_partials = np.zeros(len(args))
+            der_partials[cursor] = 1
+            params.append(Dual(arg, der_partials, np.zeros(len(args))))
+        res = func(*params)
+        if isinstance(res, collections.Iterable):
+            return [getattr(i, der_attr) for i in res]
+        else:
+            return getattr(res, der_attr)
+    else:
+        args = Dual(args,[1],[0])
+        res = func(args)
+        if isinstance(res, collections.Iterable):
+            return [getattr(i, der_attr) for i in res]
+        else:
+            return getattr(res, der_attr)
+
+def diff(func):
+    def func_wrapper(args):
+        return _eval_func(func, args, 'der')
+    return func_wrapper
+
+def diffdiff(func):
+    def func_wrapper(args):
+        return _eval_func(func, args, 'der2')
+    return func_wrapper
+
 if __name__ == '__main__':
     pass
