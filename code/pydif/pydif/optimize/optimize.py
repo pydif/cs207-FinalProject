@@ -10,7 +10,7 @@ class optimize():
     def __init__(self, func):
         self.func = func
 
-    def gradient_descent(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_iters=False):
+    def gradient_descent(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_hist=False):
 
         num_params = len(signature(self.func).parameters)
         badDimentionsMsg = 'poorly formatted initial position. should be of length {}.'.format(num_params)
@@ -37,13 +37,13 @@ class optimize():
             hist.append(cur_pos) #store history
         np.array(hist)
 
-        if return_iters:
-            return cur_pos, hist, iters
-        else:
+        if return_hist:
             return cur_pos, hist
+        else:
+            return cur_pos
 
     #define steepest descent
-    def steepest(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_iters=False):
+    def steepest(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_hist=False):
 
         num_params = len(signature(self.func).parameters)
         badDimentionsMsg = 'poorly formatted initial position. should be of length {}.'.format(num_params)
@@ -77,12 +77,12 @@ class optimize():
             hist.append(cur_pos) #store history
         np.array(hist)
 
-        if return_iters:
-            return cur_pos, hist, iters
-        else:
+        if return_hist:
             return cur_pos, hist
+        else:
+            return cur_pos
 
-    def newton(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_iters=False):
+    def newton(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_hist=False):
 
         num_params = len(signature(self.func).parameters)
         badDimentionsMsg = 'poorly formatted initial position. should be of length {}.'.format(num_params)
@@ -118,10 +118,10 @@ class optimize():
             hist.append(cur_pos) #store history
         hist = np.array(hist)
 
-        if return_iters:
-            return cur_pos, hist, iters
-        else:
+        if return_hist:
             return cur_pos, hist
+        else:
+            return cur_pos
 
     #function that allows for numerous initial conditions to be specified and plotted
     def plot_optimization(optimizer, initial_cond):
