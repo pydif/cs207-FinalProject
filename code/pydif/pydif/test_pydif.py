@@ -301,6 +301,17 @@ def test_composite():
     der2_3 = 2/(1*2*((3)**3)) #d/dz^2
     assert(np.allclose(ad2.get_der(pos,wrt_variables=True,order=2),[der2_1, der2_2, der2_3]))
 
+def test_derorder():
+    def f1(x):
+        return x
+
+    ad1 = pydif.autodiff(f1)
+
+    assert(ad1.get_der(2, order=1) == 1)
+    assert(ad1.get_der(2, order=2) == 0)
+    with pytest.raises(NotImplementedError):
+        ad1.get_der(2, order=3)
+
 def test_decorator():
     @diff
     def f1d(x):
@@ -308,7 +319,6 @@ def test_decorator():
     @diffdiff
     def f1dd(x):
         return x
-
 
     alpha=2
 
