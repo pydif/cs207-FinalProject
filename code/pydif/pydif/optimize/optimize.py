@@ -25,6 +25,8 @@ class optimize():
         if isinstance(val, Iterable):
             raise ValueError("The optimize class only optimizes scalar valued functions")
 
+        # pre allocate history array
+        hist = [current_pos]
         prev_step_size = 100 + precision
         while (prev_step_size > precision and iters < max_iters):
             jac = dfdx.get_der(cur_pos, wrt_variables=True)
@@ -32,11 +34,13 @@ class optimize():
             cur_pos = cur_pos - step_size * jac
             prev_step_size = np.linalg.norm(abs(cur_pos - prev_pos))
             iters += 1
+            hist.append(current_pos) #store history
+        np.array(hist)
 
         if return_iters:
-            return cur_pos, iters
+            return cur_pos, hist, iters
         else:
-            return cur_pos
+            return cur_pos, hist
 
     #define steepest descent
     def steepest(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_iters=False):
@@ -72,7 +76,11 @@ class optimize():
             iters += 1 #count step
             hist.append(current_pos) #store history
         np.array(hist)
-        return (current_pos, hist)
+
+        if return_iters:
+            return cur_pos, hist, iters
+        else:
+            return cur_pos, hist
 
     def newton(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_iters=False):
 
@@ -109,7 +117,11 @@ class optimize():
             iters += 1 #increment counter
             hist.append(current_pos) #store history
         hist = np.array(hist)
-        return (current_pos, hist)
+
+        if return_iters:
+            return cur_pos, hist, iters
+        else:
+            return cur_pos, hist
 
     #function that allows for numerous initial conditions to be specified and plotted
     def plot_optimization(optimizer, initial_cond):
