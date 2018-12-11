@@ -6,7 +6,7 @@ from collections import Iterable
 sys.path.append(os.path.join(os.getcwd(),'pydif'))
 from pydif.pydif import autodiff
 
-class optimize():
+class Optimize():
     def __init__(self, func):
         self.func = func
 
