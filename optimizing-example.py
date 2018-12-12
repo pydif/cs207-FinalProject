@@ -7,11 +7,11 @@ from pydif.optimize.optimize import Optimize
 
 
 def f(x, y):
-	return (x-1)**2 + y**2
+	return 1*( (1-x)**2 + 100*(y-x**2)**2)
 
 
 x_opt = Optimize(f)
 
-min_pos = x_opt.BFGS((1, 10))
+min_pos = x_opt.BFGS((1, -1))
 
 print(min_pos)
