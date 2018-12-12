@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-import scipy
+import scipy.optimize
 from pydif.optimize.optimize import Optimize
 
 # global minimum at (1, 1)

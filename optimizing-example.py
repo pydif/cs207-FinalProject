@@ -3,6 +3,7 @@ import sys
 import os
 sys.path.append(os.path.join(os.getcwd(),'code','pydif'))
 from pydif.pydif import autodiff
+import scipy.optimize
 from pydif.optimize.optimize import Optimize
 
 
