@@ -2,7 +2,6 @@ import sys
 import os
 import numpy as np
 from inspect import signature
-import scipy.optimize
 from collections import Iterable
 sys.path.append(os.path.join(os.getcwd(),'pydif'))
 np.warnings.filterwarnings('ignore')
