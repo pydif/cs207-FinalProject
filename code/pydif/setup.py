@@ -5,15 +5,9 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pydif",
-    version="0.0.1",
-    author="Hamish Nicholson",
-    author_email="hamish_nicholson@college.harvard.edu",
-    author="Nicholas Pagel",
-    author_email="pagel@g.harvard.edu",
-    author="Manish Reddy Vuyyuru",
-    author_email="mvuyyuru@g.harvard.edu",
-    author="Victor Sheng",
-    author_email="victorsheng@g.harvard.edu",
+    version="0.0.4",
+    author="Hamish Nicholson, Nicholas Pagel, Manish Reddy Vuyyuru, Victor Sheng",
+    author_email="hamish_nicholson@college.harvard.edu, pagel@g.harvard.edu, mvuyyuru@g.harvard.edu, victorsheng@g.harvard.edu",
     description="A work in progress package to implement automatic differentiation for numeric functions in python",
     long_description=long_description,
     long_description_content_type="text/markdown",
