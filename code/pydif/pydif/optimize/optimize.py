@@ -82,6 +82,34 @@ class Optimize():
         else:
             return coord
 
+    def newton(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_hist=False):
+        num_params = len(signature(self.func).parameters)
+        badDimentionsMsg = 'poorly formatted initial position. should be of length {}.'.format(num_params)
+        if num_params != len(init_pos):
+            raise ValueError(badDimentionsMsg)
+        cur_pos = init_pos
+        iters = 0
+        dfdx = autodiff(self.func)
+        val = dfdx.get_val(init_pos)
+         # if isinstance(val, Iterable):
+        #     raise ValueError("The optimize class only optimizes scalar valued functions")
+         #preallocate arrays
+        hist = [cur_pos]
+         #set inital conditions
+        iters = 0
+        s_k = 0
+        step = 10000
+         #define conditions to break loop
+        while ((iters <= max_iters) and (np.linalg.norm(step) >= precision)):
+            step = np.linalg.solve(dfdx.get_der(cur_pos, wrt_variables=True, order=1), -self.func(*cur_pos))
+            cur_pos = cur_pos + step
+            iters += 1
+            hist.append(cur_pos)
+        hist = np.array(hist)
+        if return_hist:
+            return cur_pos, hist
+        else:
+            return cur_pos
     #define steepest descent
     def steepest(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_hist=False):
 
@@ -113,14 +141,11 @@ class Optimize():
             def line_to_search(step):
                 return self.func(*(np.array(cur_pos)+step*s))
             n = scipy.optimize.minimize(line_to_search, 1).x[0]
-            # n = line_search(self.wrapper_func_, dfdx.get_der, cur_pos, s)[0]
-            print(n)
             step = np.linalg.norm(n*s) #set step size
             cur_pos = cur_pos + n * s #append value after step
             iters += 1 #count step
             hist.append(cur_pos) #store history
         np.array(hist)
-        print(hist)
 
         if return_hist:
             return cur_pos, hist
