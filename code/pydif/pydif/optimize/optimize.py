@@ -133,8 +133,8 @@ class Optimize():
         dfdx = autodiff(self.func)
         val = dfdx.get_val(init_pos)
 
-        if isinstance(val, Iterable):
-            raise ValueError("The optimize class only optimizes scalar valued functions")
+        # if isinstance(val, Iterable):
+        #     raise ValueError("The optimize class only optimizes scalar valued functions")
 
         #preallocate arrays
         hist = [cur_pos]
@@ -144,16 +144,12 @@ class Optimize():
         s_k = 0
         step = 10000
 
-        #TODO make hessian a function or change the call in the line below
-        hessian = dfdx.get_der(cur_pos, wrt_variables=True, order = 2)
-
         #define conditions to break loop
-        while ((iters <= max_iters) and (step >= precision)):
-            s = np.linalg.solve(hessian(cur_pos), -dfdx.get_val(cur_pos)) #TODO make hessian work
-            step = np.linalg.norm(s) # get step size
-            cur_pos = cur_pos + s #step
-            iters += 1 #increment counter
-            hist.append(cur_pos) #store history
+        while ((iters <= max_iters) and (np.linalg.norm(step) >= precision)):
+            step = np.linalg.solve(dfdx.get_der(cur_pos, wrt_variables=True, order=1), -self.func(*cur_pos))
+            cur_pos = cur_pos + step
+            iters += 1
+            hist.append(cur_pos)
         hist = np.array(hist)
 
         if return_hist:
