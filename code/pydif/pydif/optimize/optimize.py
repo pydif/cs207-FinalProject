@@ -4,11 +4,13 @@ import numpy as np
 from inspect import signature
 from collections import Iterable
 sys.path.append(os.path.join(os.getcwd(),'pydif'))
+np.warnings.filterwarnings('ignore')
 from pydif.pydif import autodiff
 
 class Optimize():
     def __init__(self, func):
         self.func = func
+        self.num_params = len(signature(func).parameters)
 
     def gradient_descent(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_hist=False):
 
@@ -41,6 +43,37 @@ class Optimize():
             return cur_pos, hist
         else:
             return cur_pos
+
+    def delta_B(self, y, s, B):
+        y = y.reshape((self.num_params, 1))
+        s = s.reshape((self.num_params, 1))
+        return np.matmul(y, y.T)/np.matmul(y.T, s)-np.matmul(np.matmul(np.matmul(B, s), s.T), B)/(np.matmul(np.matmul(s.T, B),s))
+
+    def BFGS(self, init_pos):
+
+        #set original values
+        coord = init_pos
+
+        hist = [coord] #preallocate array
+
+        #set inital conditions
+        s = 0
+        iterations = 0
+        step = 10000
+        B = np.identity(self.num_params)
+        dfdx = autodiff(self.func)
+
+        #set conditions for while loop
+        while ((iterations <= 1999) and (step >= 10**-8)):
+            s = np.linalg.solve(B, -dfdx.get_der(coord, wrt_variables = True)) #step
+            step = np.linalg.norm(s) #step size
+            y = dfdx.get_der(coord+s, wrt_variables = True) - dfdx.get_der(coord, wrt_variables = True) #new y
+            coord = coord + s #new coord
+            B = B + self.delta_B(y, s, B) #get new B
+            iterations += 1
+            hist.append(coord)
+        hist = np.array(hist)
+        return coord
 
     #define steepest descent
     def steepest(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_hist=False):
@@ -122,24 +155,24 @@ class Optimize():
             return cur_pos, hist
         else:
             return cur_pos
-
-    #function that allows for numerous initial conditions to be specified and plotted
-    def plot_optimization(optimizer, initial_cond):
-
-        #define initial conditions and plot results
-        for init in initial_cond:
-            min_val, total_it, hist = self.optimizer(init[0], init[1]) #call optimization function
-            hist = np.array(hist)
-
-            #format plot
-            xs = np.linspace(-5,5,1000)
-            ys = np.linspace(-5,5,1000)
-            X, Y = np.meshgrid(xs, ys)
-            Z = f(np.array([X,Y])) # TODO f is the function we  are optimizing
-            plt.contour(X, Y, Z, 100)
-            plt.plot(hist[:,0], hist[:,1])
-            plt.ylim((ys[0],ys[-1]))
-            plt.xlim((xs[0],xs[-1]))
-            plt.xlabel('x')
-            plt.ylabel('y')
-            plt.show()
+    #
+    # #function that allows for numerous initial conditions to be specified and plotted
+    # def plot_optimization(optimizer, initial_cond):
+    #
+    #     #define initial conditions and plot results
+    #     for init in initial_cond:
+    #         min_val, total_it, hist = self.optimizer(init[0], init[1]) #call optimization function
+    #         hist = np.array(hist)
+    #
+    #         #format plot
+    #         xs = np.linspace(-5,5,1000)
+    #         ys = np.linspace(-5,5,1000)
+    #         X, Y = np.meshgrid(xs, ys)
+    #         Z = f(np.array([X,Y])) # TODO f is the function we  are optimizing
+    #         plt.contour(X, Y, Z, 100)
+    #         plt.plot(hist[:,0], hist[:,1])
+    #         plt.ylim((ys[0],ys[-1]))
+    #         plt.xlim((xs[0],xs[-1]))
+    #         plt.xlabel('x')
+    #         plt.ylabel('y')
+    #         plt.show()
