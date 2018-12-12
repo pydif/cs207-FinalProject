@@ -72,7 +72,7 @@ class Dual():
         try:
             return Dual(self.val**x.val, self.val**x.val*(self.der*(x.val/self.val)+x.der * np.log(self.val)), self.val ** x.val * ((x.val * self.der)/self.val + np.log(self.val) * x.der) ** 2 + self.val ** x.val * ((x.val * self.der2)/self.val + (2 * self.der * x.der)/self.val - (x.val * self.der**2)/self.val**2 + np.log(self.val) * x.der2))
         except AttributeError:
-            return Dual(x**self.val, np.log(x) * x ** self.val  * self.der, np.log(x) * x  ** self.val * (self.der2 + np.log(x) * self.der  ** 2))
+            return Dual(self.val**x, x * self.val * self.der, x * (self.val * self.der2 + self.der ** 2))
 
     #overload rpow similarly to above
     def __rpow__(self, x):
