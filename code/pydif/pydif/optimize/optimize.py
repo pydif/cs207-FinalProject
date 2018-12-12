@@ -48,7 +48,7 @@ class Optimize():
         s = s.reshape((self.num_params, 1))
         return np.matmul(y, y.T)/np.matmul(y.T, s)-np.matmul(np.matmul(np.matmul(B, s), s.T), B)/(np.matmul(np.matmul(s.T, B),s))
 
-    def BFGS(self, init_pos, max_iters=100, precision=10**-8, return_hist=false):
+    def BFGS(self, init_pos, max_iters=100, precision=10**-8, return_hist=False):
         #set original values
         coord = init_pos
 
