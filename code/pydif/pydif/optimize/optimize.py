@@ -12,6 +12,10 @@ class Optimize():
         self.func = func
         self.num_params = len(signature(func).parameters)
 
+    def wrapper_func_(x):
+        return self.func(*x)
+
+
     def gradient_descent(self, init_pos, step_size=0.1, max_iters=100, precision=0.001, return_hist=False):
         num_params = len(signature(self.func).parameters)
         badDimentionsMsg = 'poorly formatted initial position. should be of length {}.'.format(num_params)
